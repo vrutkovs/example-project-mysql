@@ -35,6 +35,7 @@ def cleanup(context):
         if exit_status != "0":
             logging.debug(run("docker logs %s" % cid))
     finally:
+        run("docker kill %s" % cid)
         run("docker rm %s" % cid)
         os.remove(context.cid_file)
 

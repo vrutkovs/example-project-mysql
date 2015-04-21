@@ -29,21 +29,20 @@ def set_mysql_params(context, param, value):
 
 
 @then(u'mysql connection can be established')
-@then(u'mysql connection via user "{user}", password "{password}" and db "{db}" can be established')
-@then(u'mysql connection via user "{user}", password "{password}" and db "{db}" can {negative:w} be established')
-def mysql_connect(context, negative=False, user='', password='', db='', query=''):
-    if not user:
-        user = context.mysql['MYSQL_USER']
-    if not password:
-        password = context.mysql['MYSQL_PASSWORD']
-    if not db:
-        db = context.mysql['MYSQL_DATABASE']
+@then(u'mysql connection can {action:w} be established')
+@then(u'mysql connection with parameters can be established')
+@then(u'mysql connection with parameters can {action:w} be established')
+def mysql_connect(context, action=False):
+    if context.table:
+        for row in context.table:
+            context.mysql[row['param']] = row['value']
+
+    user = context.mysql['MYSQL_USER']
+    password = context.mysql['MYSQL_PASSWORD']
+    db = context.mysql['MYSQL_DATABASE']
 
     # Get container IP
     context.ip = context.run("docker inspect --format='{{.NetworkSettings.IPAddress}}' %s" % context.cid).strip()
-
-    context.mysql_user = user
-    context.mysql_password = password
 
     for attempts in xrange(0, 5):
         try:
@@ -53,7 +52,7 @@ def mysql_connect(context, negative=False, user='', password='', db='', query=''
         except subprocess.CalledProcessError:
             # If  negative part was set, then we expect a bad code
             # This enables steps like "can not be established"
-            if negative:
+            if action != 'can':
                 return
             sleep(5)
 
