@@ -1,4 +1,4 @@
-FROM rhel7
+FROM centos:centos7
 
 # MySQL image for OpenShift.
 #
@@ -22,14 +22,13 @@ EXPOSE 3306
 # This image must forever use UID 27 for mysql user so our volumes are
 # safe in the future. This should *never* change, the last test is there
 # to make sure of that.
-RUN yum install -y yum-utils gettext hostname && \
-    yum-config-manager --enable rhel-server-rhscl-7-rpms && \
-    yum-config-manager --enable rhel-7-server-optional-rpms && \
-    yum install -y --setopt=tsflags=nodocs bind-utils mysql55 && \
+RUN rpmkeys --import file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7 && \
+    yum -y --setopt=tsflags=nodocs install https://www.softwarecollections.org/en/scls/rhscl/mysql55/epel-7-x86_64/download/rhscl-mysql55-epel-7-x86_64.noarch.rpm && \
+    yum -y --setopt=tsflags=nodocs install gettext hostname bind-utils mysql55 && \
     yum clean all && \
     mkdir -p /var/lib/mysql/data && chown mysql.mysql /var/lib/mysql/data && \
+    ls -la /opt/rh/mysql55/root/usr/bin/resolveip && \
     test "$(id mysql)" = "uid=27(mysql) gid=27(mysql) groups=27(mysql)"
-
 
 COPY run-*.sh /usr/local/bin/
 
