@@ -2,6 +2,7 @@
 import subprocess
 import os
 import logging
+import re
 
 
 def run(command):
@@ -52,7 +53,9 @@ def before_scenario(context, scenario):
         if 'image' not in context.config.userdata:
             raise Exception("Please specify image to test: behave -D=image=test")
         context.image = context.config.userdata['image']
-        context.cid_file = "/tmp/%s.cid" % context.image
+        # Make sure we generate nice name here (for images like openshift/postgresql-92-centos7)
+        cid_file_name = re.sub(r'\W+', '', context.image)
+        context.cid_file = "/tmp/%s.cid" % cid_file_name
         cleanup(context)
     except Exception as e:
         print("before_scenario: exception %s" % str(e))
