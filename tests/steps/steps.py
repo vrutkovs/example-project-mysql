@@ -41,6 +41,8 @@ def mysql_connect(context, action=False):
     password = context.mysql['MYSQL_PASSWORD']
     db = context.mysql['MYSQL_DATABASE']
 
+    context.execute_steps(u'* port 3306 is open')
+
     # Get container IP
     context.ip = context.run("docker inspect --format='{{.NetworkSettings.IPAddress}}' %s" % context.cid).strip()
 
@@ -57,3 +59,23 @@ def mysql_connect(context, action=False):
             sleep(5)
 
     raise Exception("Failed to connect to mysql")
+
+
+@step(u'port {port:d} is open')
+@step(u'port {port:d} is {negative} open')
+def port_open(context, port, negative=False):
+    # Get container IP
+    context.ip = context.run("docker inspect --format='{{.NetworkSettings.IPAddress}}' %s" % context.cid).strip()
+
+    for attempts in xrange(0, 5):
+        try:
+            print(context.run('nc -w5 %s %s < /dev/null' % (context.ip, port)))
+            return
+        except subprocess.CalledProcessError:
+            # If  negative part was set, then we expect a bad code
+            # This enables steps like "can not be established"
+            if negative:
+                return
+            sleep(5)
+
+    raise Exception("Failed to connect to port %s" % port)
