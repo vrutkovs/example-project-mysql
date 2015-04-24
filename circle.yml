@@ -1,0 +1,21 @@
+machine:
+  services:
+    - docker
+  python:
+    version: 2.7
+
+dependencies:
+  pre:
+    - pip install behave
+  override:
+    - docker info
+    - docker build -t mysql .
+
+checkout:
+  post:
+    - git submodule sync
+    - git submodule update --init
+
+test:
+  override:
+    - behave tests -D=IMAGE=mysql
