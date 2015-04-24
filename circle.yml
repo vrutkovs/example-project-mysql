@@ -15,6 +15,7 @@ checkout:
   post:
     - git submodule sync
     - git submodule update --init
+    - rm -rf .git  # Don't let CircleCI cache submodules
 
 test:
   override:
