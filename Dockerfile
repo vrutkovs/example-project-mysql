@@ -17,7 +17,7 @@ ENV IMAGE_TAGS              mysql,mysql55
 ENV IMAGE_EXPOSE_SERVICES   3306:mysql
 
 MAINTAINER  Martin Nagy <mnagy@redhat.com>
-EXPOSE 3306
+EXPOSE 330
 
 # This image must forever use UID 27 for mysql user so our volumes are
 # safe in the future. This should *never* change, the last test is there
