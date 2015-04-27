@@ -25,10 +25,7 @@ EXPOSE 3306
 RUN rpmkeys --import file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7 && \
     yum -y --setopt=tsflags=nodocs install https://www.softwarecollections.org/en/scls/rhscl/mysql55/epel-7-x86_64/download/rhscl-mysql55-epel-7-x86_64.noarch.rpm && \
     yum -y --setopt=tsflags=nodocs install gettext hostname bind-utils mysql55 && \
-    yum clean all && \
-    mkdir -p /var/lib/mysql/data && chown mysql.mysql /var/lib/mysql/data && \
-    ls -la /opt/rh/mysql55/root/usr/bin/resolveip && \
-    test "$(id mysql)" = "uid=27(mysql) gid=27(mysql) groups=27(mysql)"
+    yum clean all
 
 COPY run-*.sh /usr/local/bin/
 
