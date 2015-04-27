@@ -25,13 +25,16 @@ def before_scenario(context, scenario):
     docker_cleanup(context)
 
 
-def after_scenario(context, scenario):
+def after_step(context, step):
     # TODO: Move me to a function and run it from example's before_scenario
 
     # Store scenario logs
     if not getattr(context, "cid", None):
         return
-    if scenario.status == 'failed':
+
+    if step.status == 'failed':
         run("docker logs %s" % context.cid)
 
+
+def after_scenario(context, scenario):
     docker_cleanup(context)

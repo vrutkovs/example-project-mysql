@@ -20,4 +20,4 @@ checkout:
 test:
   override:
     - mkdir -p $CIRCLE_TEST_REPORTS/junit/
-    - behave tests -D=IMAGE=mysql -f plain --junit --junit-directory $CIRCLE_TEST_REPORTS/junit/
+    - behave tests -D=IMAGE=mysql --junit --junit-directory $CIRCLE_TEST_REPORTS/junit/
