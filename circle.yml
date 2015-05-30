@@ -6,7 +6,8 @@ machine:
 
 dependencies:
   pre:
-    - pip install behave
+    - pip install behave ansible
+    - git clone https://github.com/vrutkovs/ctf-cli.git ../ctf-cli
   override:
     - docker info
     - docker build -t mysql .
@@ -20,4 +21,4 @@ checkout:
 test:
   override:
     - mkdir -p $CIRCLE_TEST_REPORTS/junit/
-    - behave tests -D=IMAGE=mysql -f plain --junit --junit-directory $CIRCLE_TEST_REPORTS/junit/
+    - ../ctf-cli/ctf-cli.py run --junit $CIRCLE_TEST_REPORTS/junit/

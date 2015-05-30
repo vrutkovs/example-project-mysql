@@ -1,6 +1,6 @@
 [submodule "tests/steps/common_steps"]
 	path = tests/steps/common_steps
-	url = git@github.com:vrutkovs/common-steps.git
-[submodule "tests/features/common-docker"]
-	path = tests/features/common-docker
-	url = git@github.com:vrutkovs/common-features.git
+	url = https://github.com/Containers-Testing-Framework/common-steps.git
+[submodule "tests/features/common-features"]
+	path = tests/features/common-features
+	url = https://github.com/Containers-Testing-Framework/common-features.git
